@@ -1,43 +1,83 @@
 use reqwest::header::COOKIE;
 use reqwest::header::USER_AGENT;
 use reqwest::*;
+use std::borrow::Borrow;
 use std::borrow::BorrowMut;
 use std::result;
 use std::str::FromStr;
 use std::sync::{Arc, RwLock};
 
-struct YAHOOCONNECT {
+pub struct YAHOOCONNECT {
     multiclient: reqwest::Client,
-    cookie: RwLock<String>,
-    crumb: RwLock<String>,
+    cookie: Arc<RwLock<String>>,
+    crumb: Arc<RwLock<String>>,
     cookie_url: Arc<String>,
     crumb_url: Arc<String>,
+    user_agent: Arc<String>
 }
 
 impl YAHOOCONNECT {
-    fn new() -> std::result::Result<YAHOOCONNECT, &str> {
+    pub async fn new() -> Result<YAHOOCONNECT> {
         let multiclient = reqwest::Client::new();
-        let cookie = RwLock::new(String::new());
-        let crumb = RwLock::new(String::new());
-        let cookie_url = String::from_str("hi");
-        let crumb_url = String::from_str("hi");
-
-        let mut te = YAHOOCONNECT {
+        let cookie = Arc::new(RwLock::new(String::new()));
+        let crumb = Arc::new(RwLock::new(String::new()));
+        let cookie_url = Arc::new(String::from("https://fc.yahoo.com"));
+        let crumb_url = Arc::new(String::from("https://query2.finance.yahoo.com/v7/finance/quote?symbols="));
+        let user_agent = Arc::new(String::from("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"));
+        let te = YAHOOCONNECT {
             multiclient,
             cookie,
             crumb,
             cookie_url,
-            crumb_urlm,
+            crumb_url,
+            user_agent,
         };
-        YAHOOCONNECT::update_crumb_n_cookie(te.borrow_mut());
-        return Arc::new(te);
+        YAHOOCONNECT::update_crumb_n_cookie(te.borrow()).await?;
+        return Ok(te);
     }
 
-    fn update_crumb_n_cookie(&mut self) -> std::Result<(), &str> {
+    async fn update_crumb_n_cookie(&self) -> Result<()>  {
+        // get cookie first from link.
+        let response = self.multiclient.get("https://fc.yahoo.com").send().await?;
+        let mut cookie_str = String::new();
+        for sr in response.cookies()
+        {
+            cookie_str = format!("{}={}", sr.name(), sr.value());
+        }
+
+        {
+            let mut re = self.cookie.write().unwrap();
+            *re = cookie_str.clone();
+        }
+
+        let user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
+        let crumb_response = self.multiclient
+        .get("https://query2.finance.yahoo.com/v1/test/getcrumb")
+        .header(COOKIE, cookie_str)
+        .header(USER_AGENT, user_agent)
+        .send()
+        .await?.text().await?;
+
+        {
+            let mut re = self.crumb.write().unwrap();
+            *re = crumb_response;
+        }
+
         Ok(())
     } //if update doesnt work, return error with each step.
 
-    fn get_ticker(&mut self, name: &str) -> std::Result<(), &str> {} //we read the error, if it is
+    pub async fn get_ticker(&self, name: &str) -> Result<String> {
+        let mut final_get = String::new();
+        final_get = format!("{}{}&crumb={}",self.crumb_url.as_str(),name,self.crumb.read().unwrap().as_str());
+        let ticker_info = self.multiclient.get(final_get)
+        .header(COOKIE, self.cookie.read().unwrap().as_str())
+        .header(USER_AGENT, self.user_agent.as_str())
+        .send()
+        .await?
+        .text()
+        .await?;
+        Ok(ticker_info)
+    } //we read the error, if it is
                                                                      //crumb/cookie related udpate
                                                                      //that.
 }
