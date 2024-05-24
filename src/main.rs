@@ -1,23 +1,22 @@
-use reqwest::header::{HeaderValue, Iter, USER_AGENT};
-use tokio::main;
-use reqwest::*;
-use std::time::{self, Duration};
-use std::time::Instant;
-use std::string;
 use reqwest::header::COOKIE;
+use reqwest::header::USER_AGENT;
+use reqwest::*;
+use std::string;
+use tokio::main;
+
+mod supp;
+
 #[tokio::main]
-async fn main() -> Result<()>
-{   
+async fn main() -> Result<()> {
     //first things first define a url.
     let multi_client = reqwest::Client::new();
     let response = multi_client.get("https://fc.yahoo.com");
     let s = response.send().await?;
     let mut i = 1;
     let mut cookie_str = String::new();
-    for sr in s.cookies()
-    {
+    for sr in s.cookies() {
         println!("{i}th cokies are {:?}", sr);
-        i+=1;
+        i += 1;
         cookie_str = format!("{}={}", sr.name(), sr.value());
     }
 
@@ -32,14 +31,18 @@ async fn main() -> Result<()>
         .text()
         .await?;
     let mut final_get = String::new();
-    final_get = format!("{}{}","https://query2.finance.yahoo.com/v7/finance/quote?symbols=TSLA&crumb=", crumb_response);
-    let get_tsla = multi_client.get(final_get)
-    .header(COOKIE, cookie_str)
-    .header(USER_AGENT, user_agent)
-    .send() 
-    .await?
-    .text()
-    .await?;
+    final_get = format!(
+        "{}{}",
+        "https://query2.finance.yahoo.com/v7/finance/quote?symbols=TSLA&crumb=", crumb_response
+    );
+    let get_tsla = multi_client
+        .get(final_get)
+        .header(COOKIE, cookie_str)
+        .header(USER_AGENT, user_agent)
+        .send()
+        .await?
+        .text()
+        .await?;
 
     println!("tesla is rawr {get_tsla}");
 
