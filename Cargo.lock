@@ -1389,7 +1389,6 @@ dependencies = [
 name = "yahoo_tick_grabber"
 version = "0.1.0"
 dependencies = [
- "bytes",
  "reqwest",
  "tokio",
 ]

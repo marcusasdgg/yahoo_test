@@ -12,5 +12,4 @@ license = "WTPFL"
 
 [dependencies]
 tokio = {version = "*", features = ["full"]}
-bytes = "*"
 reqwest = {version = "*", features = ["cookies"]}
