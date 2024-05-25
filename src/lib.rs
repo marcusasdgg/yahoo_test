@@ -66,7 +66,26 @@ impl YAHOOCONNECT {
         Ok(())
     } //if update doesnt work, return error with each step.
 
-    pub async fn get_ticker(&self, name: &str) -> Result<String> {
+    pub async fn get_ticker(&self, name: &str) -> std::result::Result<String, String> {
+        let ticker_info = self.get_tic_internal(name).await;
+        match ticker_info {
+            Ok(ticker_info) => return Ok(ticker_info),
+            _ => {
+                self.update_crumb_n_cookie();
+                let tryagain = self.get_tic_internal(name).await;
+                match tryagain {
+                    Ok(tryagain) => Ok(tryagain),
+                    _ => return Err("urls have probably changed".to_string()),
+                }
+            }
+
+        }
+        
+        //test
+    } //we read the error, if it is
+    
+    async fn get_tic_internal(&self,name: &str) -> Result<String>
+    {
         let mut final_get = String::new();
         final_get = format!("{}{}&crumb={}",self.crumb_url.as_str(),name,self.crumb.read().unwrap().as_str());
         let ticker_info = self.multiclient.get(final_get)
@@ -76,17 +95,8 @@ impl YAHOOCONNECT {
         .await?
         .text()
         .await?;
-
-        if !ticker_info.contains(name)
-        {
-            self.update_crumb_n_cookie();
-
-        }
-        //test
         
-        Ok(ticker_info)
-    } //we read the error, if it is
-    
-    async fn get_tic_internal                                                                 //crumb/cookie related udpate
+        return Ok(ticker_info);
+    }                                                            //crumb/cookie related udpate
                                                                      //that.
 }
