@@ -76,8 +76,15 @@ impl YAHOOCONNECT {
         .await?
         .text()
         .await?;
+
+        if !ticker_info.contains(name)
+        {
+            self.update_crumb_n_cookie();
+
+        }
         Ok(ticker_info)
     } //we read the error, if it is
-                                                                     //crumb/cookie related udpate
+    
+    async fn get_tic_internal                                                                 //crumb/cookie related udpate
                                                                      //that.
 }
