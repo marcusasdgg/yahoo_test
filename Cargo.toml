@@ -1,7 +1,12 @@
 [package]
-name = "rawr_server"
+name = "yahoo_tick_grabber"
 version = "0.1.0"
 edition = "2021"
+description = "A wrapper API around reqwest library that as of currently returns a string containing the information about a ticker off Yahoo Finance"
+homepage = "github.com/marcusasdgg"
+repository = "https://github.com/marcusasdgg/yahoo_test"
+readme = "readme.md"
+license = "WTPFL"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
