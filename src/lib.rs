@@ -1,9 +1,9 @@
 use reqwest::header::COOKIE;
 use reqwest::header::USER_AGENT;
-use reqwest::*;
+use reqwest::Client;
 use std::borrow::Borrow;
 use std::borrow::BorrowMut;
-use std::result;
+use reqwest::Result;
 use std::str::FromStr;
 use std::sync::{Arc, RwLock};
 
