@@ -82,6 +82,8 @@ impl YAHOOCONNECT {
             self.update_crumb_n_cookie();
 
         }
+        //test
+        
         Ok(ticker_info)
     } //we read the error, if it is
     
