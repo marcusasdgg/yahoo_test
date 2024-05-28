@@ -69,15 +69,15 @@ impl YAHOOCONNECT {
 
     pub async fn get_ticker(&self, name: &str) -> std::result::Result<String, String> {
         let ticker_info = self.get_tic_internal(name).await.unwrap();
-        if ticker_info.starts_with("quoteResponse")
+        if ticker_info.contains("quoteResponse")
         {
             return Ok(ticker_info)
         }
-        if ticker_info.starts_with("Invalid Crumb")
+        if ticker_info.contains("Invalid Crumb")
         {
             self.update_crumb_n_cookie().await.unwrap();
             let ticker_info = self.get_tic_internal(name).await.unwrap();
-            if ticker_info.starts_with("quoteResponse")
+            if ticker_info.contains("quoteResponse")
             {
             return Ok(ticker_info)
             } else {
