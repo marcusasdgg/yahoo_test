@@ -69,7 +69,7 @@ impl YAHOOCONNECT {
 
     pub async fn get_ticker(&self, name: &str) -> std::result::Result<String, String> {
         let ticker_info = self.get_tic_internal(name).await.unwrap();
-        if ticker_info.contains("quoteResponse")
+        if ticker_info.contains("result\":[{")
         {
             return Ok(ticker_info)
         }
@@ -109,3 +109,5 @@ impl YAHOOCONNECT {
 
 
 //error checking added, need to update version.
+
+//botched error checking, minor change needed to correctly return error when no stock found with ticker.

@@ -1,6 +1,6 @@
 [package]
 name = "yahoo_tick_grabber"
-version = "0.1.2"
+version = "0.1.3"
 edition = "2021"
 description = "A wrapper API around reqwest library that as of currently returns a string containing the information about a ticker off Yahoo Finance"
 homepage = "https://github.com/marcusasdgg"
