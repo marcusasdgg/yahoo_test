@@ -5,3 +5,7 @@
 
 ### Removed
 - removed unused libraries in source file.
+
+## [0.1.2] - 2024-5-28
+### Changed
+- fixed bug caused by starts with that broke the entire API.
