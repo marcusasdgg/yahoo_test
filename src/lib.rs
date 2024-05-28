@@ -5,7 +5,8 @@ use std::borrow::Borrow;
 use std::borrow::BorrowMut;
 use reqwest::Result;
 use std::str::FromStr;
-use std::sync::{Arc, RwLock};
+use std::sync::{Arc};
+use tokio::sync::RwLock;
 
 pub struct YAHOOCONNECT {
     multiclient: reqwest::Client,
@@ -46,7 +47,7 @@ impl YAHOOCONNECT {
         }
 
         {
-            let mut re = self.cookie.write().unwrap();
+            let mut re = self.cookie.write().await;
             *re = cookie_str.clone();
         }
 
@@ -59,7 +60,7 @@ impl YAHOOCONNECT {
         .await?.text().await?;
 
         {
-            let mut re = self.crumb.write().unwrap();
+            let mut re = self.crumb.write().await;
             *re = crumb_response;
         }
 
@@ -68,19 +69,24 @@ impl YAHOOCONNECT {
 
     pub async fn get_ticker(&self, name: &str) -> std::result::Result<String, String> {
         let ticker_info = self.get_tic_internal(name).await.unwrap();
-        if !ticker_info.contains(name)
+        if ticker_info.starts_with("quoteResponse")
+        {
+            return Ok(ticker_info)
+        }
+        if ticker_info.starts_with("Invalid Crumb")
         {
             self.update_crumb_n_cookie().await.unwrap();
             let ticker_info = self.get_tic_internal(name).await.unwrap();
-            if !ticker_info.contains(name)
+            if ticker_info.starts_with("quoteResponse")
             {
-                return Err("Urls probably got fixed".to_string());
+            return Ok(ticker_info)
             } else {
-                return Ok(ticker_info);
+                return Err("Search Error".to_string());
             }
+        } else {
+             return Err("Search Error".to_string());
         }
 
-        return Ok(ticker_info);
         }
         
         //test //we read the error, if it is
@@ -88,9 +94,9 @@ impl YAHOOCONNECT {
     async fn get_tic_internal(&self,name: &str) -> Result<String>
     {
         let mut final_get = String::new();
-        final_get = format!("{}{}&crumb={}",self.crumb_url.as_str(),name,self.crumb.read().unwrap().as_str());
+        final_get = format!("{}{}&crumb={}",self.crumb_url.as_str(),name,self.crumb.read().await.as_str());
         let ticker_info = self.multiclient.get(final_get)
-        .header(COOKIE, self.cookie.read().unwrap().as_str())
+        .header(COOKIE, self.cookie.read().await.as_str())
         .header(USER_AGENT, self.user_agent.as_str())
         .send()
         .await?
@@ -101,3 +107,6 @@ impl YAHOOCONNECT {
     }                                                            //crumb/cookie related udpate
                                                                      //that.
 }
+
+
+//error checking added, need to update version.
