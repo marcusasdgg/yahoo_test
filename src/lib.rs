@@ -1,11 +1,11 @@
 use reqwest::header::COOKIE;
 use reqwest::header::USER_AGENT;
-use reqwest::Client;
+
 use std::borrow::Borrow;
-use std::borrow::BorrowMut;
+
 use reqwest::Result;
-use std::str::FromStr;
-use std::sync::{Arc};
+
+use std::sync::Arc;
 use tokio::sync::RwLock;
 
 pub struct YAHOOCONNECT {
@@ -39,7 +39,7 @@ impl YAHOOCONNECT {
 
     async fn update_crumb_n_cookie(&self) -> Result<()>  {
         // get cookie first from link.
-        let response = self.multiclient.get("https://fc.yahoo.com").send().await?;
+        let response = self.multiclient.get(self.cookie_url.as_str()).send().await?;
         let mut cookie_str = String::new();
         for sr in response.cookies()
         {
@@ -93,8 +93,7 @@ impl YAHOOCONNECT {
     
     async fn get_tic_internal(&self,name: &str) -> Result<String>
     {
-        let mut final_get = String::new();
-        final_get = format!("{}{}&crumb={}",self.crumb_url.as_str(),name,self.crumb.read().await.as_str());
+        let final_get = format!("{}{}&crumb={}",self.crumb_url.as_str(),name,self.crumb.read().await.as_str());
         let ticker_info = self.multiclient.get(final_get)
         .header(COOKIE, self.cookie.read().await.as_str())
         .header(USER_AGENT, self.user_agent.as_str())
