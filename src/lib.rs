@@ -67,7 +67,17 @@ impl YAHOOCONNECT {
         Ok(())
     } //if update doesnt work, return error with each step.
 
-    pub async fn get_ticker(&self, name: &str) -> std::result::Result<String, String> {
+    pub async fn get_ticker(&self, lame: &str, exchange: &str) -> std::result::Result<String, String> {
+        let exchange_append : String = match exchange {
+            "ASX" => String::from(".AX"),
+            "NYSE" => String::new(),
+            "NASDAQ" => String::new(),
+            "HKEX" => String::from(".HK"),
+            "SGX" => String::from(".SI"),
+            _ => panic!()
+        };
+        let s = lame.to_owned() + exchange_append.as_str();
+        let name = s.as_str();
         let ticker_info = self.get_tic_internal(name).await.unwrap();
         if ticker_info.contains("result\":[{")
         {
@@ -111,3 +121,5 @@ impl YAHOOCONNECT {
 //error checking added, need to update version.
 
 //botched error checking, minor change needed to correctly return error when no stock found with ticker.
+
+//add serialization and ability to switch between exchanges
