@@ -11,7 +11,11 @@
 - fixed bug caused by starts with that broke the entire API.
 
 
-## [0.1.2=3] - 2024-5-28
+## [0.1.3] - 2024-5-28
 ### Changed
 - fixed bug in the error searching to finally fix returning an error if ticker was not found.
+
+## [0.1.4] - 2024-5-29
+### Changed
+- added option to declare exchange i.e for ASX, that internally appends neccesary string to search Yahoo's API.
 
