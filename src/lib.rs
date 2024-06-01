@@ -8,6 +8,9 @@ use reqwest::Result;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 
+
+
+
 pub struct YAHOOCONNECT {
     multiclient: reqwest::Client,
     cookie: Arc<RwLock<String>>,
@@ -68,6 +71,11 @@ impl YAHOOCONNECT {
     } //if update doesnt work, return error with each step.
 
     pub async fn get_ticker(&self, lame: &str, exchange: &str) -> std::result::Result<String, String> {
+        let mut stinglist: Vec<String> = Vec::new();
+        if lame.contains(",")
+        {
+            stinglist  = lame.split(",").map(|x| x.to_string()).collect();
+        }
         let exchange_append : String = match exchange {
             "ASX" => String::from(".AX"),
             "NYSE" => String::new(),
@@ -100,6 +108,7 @@ impl YAHOOCONNECT {
         }
         
         //test //we read the error, if it is
+        // revamp the entire function according to iterator
     
     async fn get_tic_internal(&self,name: &str) -> Result<String>
     {
@@ -120,6 +129,9 @@ impl YAHOOCONNECT {
 
 //error checking added, need to update version.
 
+//I FUCKED UP, need to change it so that this supports a string with multiple tickers.
+//add support for multi tickers and tokenization, i.e if string is AAPL,TSLA should tokenize into the 2 then realize it.
+
 //botched error checking, minor change needed to correctly return error when no stock found with ticker.
 
-//add serialization and ability to switch between exchanges
+//add serialization and ability to switch between exchange
