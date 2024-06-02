@@ -1390,5 +1390,7 @@ name = "yahoo_tick_grabber"
 version = "0.1.4"
 dependencies = [
  "reqwest",
+ "serde",
+ "serde_json",
  "tokio",
 ]

@@ -1,16 +1,14 @@
+use serde::{Serialize, Deserialize};
 type c = i32;
 
-enum quoteType {
-    EQUITY,
-    
-}
-
+#[derive(Serialize, Deserialize, Debug)]
+#[allow(non_snake_case,dead_code)]
 struct QueryResponse {
-	quoteType : c, //enum ,
+	quoteType : QuoteType, 
 	quoteSourceName : String ,
-	currency : c, //enum
-	marketState : c ,//enum ,
-	regularMarketChangePercent : u64 ,
+	currency : Currency, 
+	marketState : MarketState ,
+	regularMarketChangePercent : u64 , 
 	regularMarketPrice : u64 ,
 	exchange : String ,
 	shortName : String ,
@@ -39,8 +37,8 @@ struct QueryResponse {
 	bidSize : f64 ,
 	askSize : f64 ,
 	fullExchangeName : String ,
-	financialCurrency : c, //enum
-	regularMarketOpen : u64, //timestamp
+	financialCurrency : Currency, 
+	regularMarketOpen : u64, 
 	averageDailyVolume3Month : u64 ,
 	averageDailyVolume10Day : u64 ,
 	fiftyTwoWeekLowChange : f64 ,
@@ -74,10 +72,72 @@ struct QueryResponse {
 	priceToBook : f64 ,
 	sourceInterval : f64 ,
 	exchangeDataDelayedBy : f64 ,
-	averageAnalystRating : cString,
+	averageAnalystRating : String,
 	displayName : String ,
 	symbol : String ,
-    json : String, //contains the entire listed information above
+    json : String, 
+	language : String,
+	region : String,
+	typeDisp : QuoteType,
+	triggerable : bool,
+	customPriceAlertConfidence : i32,
+	messageBoardId : i32,
+	isEarningsDateEstimate: i64,
+	tradeable : bool,
+	cryptoTradeable : bool,
+	dividendDate : i128,
+	dividendRate : i128,
+	dividendYield : i64,
+	underlyingSymbol : String,
+	strike : f64,
+	openInterest : f64,
+	optionsType : OptionsType,
+	underlyingShortName : String,
+	expireDate : u64,
+	expireIsoDate : u64,
+	circulatingSupply : u128,
+	lastMarket : String,
+	volume24Hr : i128,
+	volumeAllCurrencies : i128,
+	fromCurrency : String,
+	toCurrency : String,
+	coinMarketCapLink : String,
+	startDate : u64,
+	coinImageUrl : String,
+	logoUrl : String,
 }
 
 //list enums below yasss queen
+#[derive(Serialize, Deserialize, Debug)]
+#[allow(dead_code)]
+enum Currency {
+	USD,
+	AUD,
+	HKD,
+	CNY,
+	SGD
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[allow(dead_code)]
+enum MarketState {
+	PREPRE,
+	CLOSED,
+	REGULAR
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[allow(dead_code)]
+enum QuoteType {
+	EQUITY,
+	OPTION,
+	BOND,
+	FUTURE
+}
+
+#[derive(Debug,Serialize, Deserialize)]
+enum OptionsType
+{
+	CALL,
+	PUT
+}
