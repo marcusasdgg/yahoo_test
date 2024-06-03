@@ -1,15 +1,25 @@
 use serde::{Serialize, Deserialize};
-type c = i32;
 
 #[derive(Serialize, Deserialize, Debug)]
 #[allow(non_snake_case,dead_code)]
-struct QueryResponse {
-	quoteType : QuoteType, 
-	quoteSourceName : String ,
-	currency : Currency, 
+pub struct QueryResponse {
+    quoteResponse: QuoteResponse, // nested object
+}
+#[derive(Serialize, Deserialize, Debug)]
+#[allow(non_snake_case,dead_code)]
+pub struct QuoteResponse {
+	result : Vec<Result>,
+	error : String,
+}
+#[derive(Serialize, Deserialize, Debug)]
+#[allow(non_snake_case,dead_code)]
+pub struct Result {
+	quoteType: String, 
+	quoteSourceName: String ,
+	currency: Currency , 
 	marketState : MarketState ,
-	regularMarketChangePercent : u64 , 
-	regularMarketPrice : u64 ,
+	regularMarketChangePercent : f64 , 
+	regularMarketPrice : f64 ,
 	exchange : String ,
 	shortName : String ,
 	longName : String ,
@@ -21,8 +31,8 @@ struct QueryResponse {
 	hasPrePostMarketData : bool ,
 	firstTradeDateMilliseconds : f64 ,
 	priceHint : i32 ,
-	postMarketChangePercent : f64 ,
-	postMarketTime : u64 ,
+	postMarketChangePercent : Option<f64> ,
+	postMarketTime : Option<u64> ,
 	postMarketPrice : f64 ,
 	postMarketChange : f64 ,
 	regularMarketChange : f64 ,
@@ -34,11 +44,11 @@ struct QueryResponse {
 	regularMarketPreviousClose : f64 ,
 	bid : f64 ,
 	ask : f64 ,
-	bidSize : f64 ,
+	bidSize : Option<f64> ,
 	askSize : f64 ,
 	fullExchangeName : String ,
 	financialCurrency : Currency, 
-	regularMarketOpen : u64, 
+	regularMarketOpen : f64, 
 	averageDailyVolume3Month : u64 ,
 	averageDailyVolume10Day : u64 ,
 	fiftyTwoWeekLowChange : f64 ,
@@ -75,37 +85,42 @@ struct QueryResponse {
 	averageAnalystRating : String,
 	displayName : String ,
 	symbol : String ,
-    json : String, 
-	language : String,
-	region : String,
-	typeDisp : QuoteType,
-	triggerable : bool,
-	customPriceAlertConfidence : i32,
-	messageBoardId : i32,
-	isEarningsDateEstimate: i64,
-	tradeable : bool,
+	language : String ,
+	region : String ,
+	typeDisp : String ,
+	triggerable : bool ,
+	customPriceAlertConfidence : String ,
+	messageBoardId : String ,
+	isEarningsDateEstimate: bool ,
+	tradeable : bool ,
 	cryptoTradeable : bool,
-	dividendDate : i128,
-	dividendRate : i128,
-	dividendYield : i64,
-	underlyingSymbol : String,
-	strike : f64,
-	openInterest : f64,
-	optionsType : OptionsType,
-	underlyingShortName : String,
-	expireDate : u64,
-	expireIsoDate : u64,
-	circulatingSupply : u128,
-	lastMarket : String,
-	volume24Hr : i128,
-	volumeAllCurrencies : i128,
-	fromCurrency : String,
+	dividendDate : Option<i128> ,
+	dividendRate : Option<i128> ,
+	dividendYield : Option<i64> ,
+	underlyingSymbol : String ,
+	strike : f64 ,
+	openInterest : f64 ,
+	optionsType : OptionsType ,
+	underlyingShortName : String ,
+	expireDate : u64 ,
+	expireIsoDate : u64 ,
+	circulatingSupply : u128 ,
+	lastMarket : String ,
+	volume24Hr : i128 , 
+	volumeAllCurrencies : i128 ,
+	fromCurrency : String ,
 	toCurrency : String,
-	coinMarketCapLink : String,
-	startDate : u64,
-	coinImageUrl : String,
-	logoUrl : String,
+	coinMarketCapLink : String ,
+	startDate : u64 ,
+	coinImageUrl : String ,
+	logoUrl : String ,
 }
+
+
+
+
+
+
 
 //list enums below yasss queen
 #[derive(Serialize, Deserialize, Debug)]
@@ -122,22 +137,23 @@ enum Currency {
 #[allow(dead_code)]
 enum MarketState {
 	PREPRE,
+	PRE,
 	CLOSED,
 	REGULAR
 }
 
-#[derive(Serialize, Deserialize, Debug)]
-#[allow(dead_code)]
-enum QuoteType {
-	EQUITY,
-	OPTION,
-	BOND,
-	FUTURE
-}
+// #[derive(Serialize, Deserialize, Debug)]
+// #[allow(dead_code)]
+// enum QuoteType {
+// 	Equity,
+// 	Option,
+// 	Bond,
+// 	Future
+// }
 
 #[derive(Debug,Serialize, Deserialize)]
 enum OptionsType
 {
-	CALL,
+	CALL,  
 	PUT
 }
