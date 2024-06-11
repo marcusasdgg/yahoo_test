@@ -1,5 +1,5 @@
 use serde::{Serialize, Deserialize};
-use chrono::{DateTime, NaiveDateTime};
+use chrono::NaiveDateTime;
 use serde::Deserializer;
 use serde::de::Error;
 

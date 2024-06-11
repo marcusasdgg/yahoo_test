@@ -8,7 +8,7 @@ use reqwest::Result;
 
 use std::sync::Arc;
 use tokio::sync::RwLock;
-
+use response::QueryResponse;
 
 
 
@@ -71,20 +71,21 @@ impl YAHOOCONNECT {
         Ok(())
     } //if update doesnt work, return error with each step.
 
-    pub async fn get_ticker(&self, lame: &str) -> std::result::Result<String, String> {
+    pub async fn get_ticker(&self, lame: &str) -> std::result::Result<QueryResponse, String> {
         let query = self.get_tic_internal(lame).await.unwrap();
         if query.contains("quoteResponse\":{\"")
         {
-            return Ok(query) // need to update to type query response.
+            let response : QueryResponse = serde_json::from_str(&query).unwrap();
+            return Ok(response)
         }
         if query.contains("Invalid Cookie") || query.contains("Invalid Crumb")
         {
             self.update_crumb_n_cookie().await.unwrap();
-            return Ok(self.get_tic_internal(lame).await.unwrap());
+            return Ok(serde_json::from_str(&self.get_tic_internal(lame).await.unwrap()).unwrap());
         } else {
             return Err("Error Searching for a ticker".to_string())
         }
-        }
+    }
         
         //test //we read the error, if it is
         // revamp the entire function according to iterator
