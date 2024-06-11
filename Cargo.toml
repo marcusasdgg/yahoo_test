@@ -1,3 +1,4 @@
+
 [package]
 name = "yahoo_tick_grabber"
 version = "0.1.4"
@@ -14,5 +15,6 @@ license = "WTFPL"
 tokio = {version = "1.37.0", features = ["full"]}
 reqwest = {version = "0.12.4", features = ["cookies"]}
 serde = { version = "1.0", features = ["derive"] }
-
 serde_json = "1.0"
+chrono = "0.4"
+
