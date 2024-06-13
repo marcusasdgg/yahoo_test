@@ -24,3 +24,6 @@
 - removed option to declare exchange, that will be handled by user.
 - hard coded type for YAHOO connect return to be of type queryresponse struct for easier field handling.
 
+## [0.1.4] - 2024-5-29
+### Fixed
+- queryResponse was not visible in prior version please do not use.
