@@ -11,8 +11,8 @@ pub struct QueryResponse {
 #[derive(Deserialize, Debug)]
 #[allow(non_snake_case,dead_code)]
 pub struct QuoteResponse {
-	result : Vec<TradeResult>,
-	error : Option<String>,
+	pub result : Vec<TradeResult>,
+	pub error : Option<String>,
 }
 #[derive(Deserialize, Debug)]
 #[allow(non_snake_case,dead_code)]
