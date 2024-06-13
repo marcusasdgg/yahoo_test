@@ -19,3 +19,11 @@
 ### Changed
 - added option to declare exchange i.e for ASX, that internally appends neccesary string to search Yahoo's API.
 
+## [0.1.4] - 2024-5-29
+### Changed
+- removed option to declare exchange, that will be handled by user.
+- hard coded type for YAHOO connect return to be of type queryresponse struct for easier field handling.
+
+## [0.1.4] - 2024-5-29
+### Fixed
+- queryResponse was not visible in prior version please do not use.
