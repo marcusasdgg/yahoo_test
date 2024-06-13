@@ -1,7 +1,7 @@
 use reqwest::header::COOKIE;
 use reqwest::header::USER_AGENT;
 
-mod response;
+pub mod response;
 use std::borrow::Borrow;
 
 use reqwest::Result;
