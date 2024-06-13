@@ -6,10 +6,9 @@ use response::{QueryResponse};
 #[tokio::main]
 async fn main() -> Result<(),()> {
     let s = YAHOOCONNECT::new().await.unwrap();
-    let guts: String = s.get_ticker("TSLA").await.unwrap();
-    let strc : QueryResponse = serde_json::from_str(&guts).unwrap();
+    let guts = s.get_ticker("TSLA240614C00075000").await.unwrap();
 
-    println!("{:?}",strc);
+    println!("{:?}",guts.quoteResponse.result);
 
     Ok(())
 }

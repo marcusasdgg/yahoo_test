@@ -6,14 +6,11 @@ use serde::de::Error;
 #[derive(Deserialize, Debug)]
 #[allow(non_snake_case,dead_code)]
 pub struct QueryResponse {
-    pub quoteResponse: QuoteResponse, // nested object
-    pub quoteResponse: QuoteResponse, // nested object
+    pub quoteResponse: QuoteResponse, // nested object// nested object
 }
 #[derive(Deserialize, Debug)]
 #[allow(non_snake_case,dead_code)]
 pub struct QuoteResponse {
-	pub result : Vec<TradeResult>,
-	pub error : Option<String>,
 	pub result : Vec<TradeResult>,
 	pub error : Option<String>,
 }
@@ -134,7 +131,6 @@ pub struct TradeResult {
 
 #[derive(Debug)]
 pub struct Timestamp {
-pub struct Timestamp {
 	second : u8,
 	minute : u8,
 	hour : u8,
@@ -151,7 +147,6 @@ pub struct Timestamp {
 #[derive(Serialize, Deserialize, Debug)]
 #[allow(dead_code)]
 pub enum Currency {
-pub enum Currency {
 	USD,
 	AUD,
 	HKD,
@@ -161,7 +156,6 @@ pub enum Currency {
 
 #[derive(Serialize, Deserialize, Debug)]
 #[allow(dead_code)]
-pub enum MarketState {
 pub enum MarketState {
 	PREPRE,
 	POSTPOST,
@@ -180,7 +174,6 @@ pub enum MarketState {
 // }
 
 #[derive(Debug,Serialize, Deserialize)]
-pub enum OptionsType
 pub enum OptionsType
 {
 	Call,  
