@@ -7,10 +7,13 @@ use serde::de::Error;
 #[allow(non_snake_case,dead_code)]
 pub struct QueryResponse {
     pub quoteResponse: QuoteResponse, // nested object
+    pub quoteResponse: QuoteResponse, // nested object
 }
 #[derive(Deserialize, Debug)]
 #[allow(non_snake_case,dead_code)]
 pub struct QuoteResponse {
+	pub result : Vec<TradeResult>,
+	pub error : Option<String>,
 	pub result : Vec<TradeResult>,
 	pub error : Option<String>,
 }
@@ -107,7 +110,7 @@ pub struct TradeResult {
     pub underlyingShortName: Option<String>,
     pub expireDate: Option<i64>,
     #[serde(deserialize_with = "deserialize_date")]
-    pub expireIsoDate: Timestamp,
+    pub expireIsoDate: Option<Timestamp>,
     pub circulatingSupply: Option<u128>,
     pub lastMarket: Option<String>,
     pub volume24Hr: Option<i128>,
@@ -131,6 +134,7 @@ pub struct TradeResult {
 
 #[derive(Debug)]
 pub struct Timestamp {
+pub struct Timestamp {
 	second : u8,
 	minute : u8,
 	hour : u8,
@@ -147,6 +151,7 @@ pub struct Timestamp {
 #[derive(Serialize, Deserialize, Debug)]
 #[allow(dead_code)]
 pub enum Currency {
+pub enum Currency {
 	USD,
 	AUD,
 	HKD,
@@ -156,6 +161,7 @@ pub enum Currency {
 
 #[derive(Serialize, Deserialize, Debug)]
 #[allow(dead_code)]
+pub enum MarketState {
 pub enum MarketState {
 	PREPRE,
 	POSTPOST,
@@ -175,6 +181,7 @@ pub enum MarketState {
 
 #[derive(Debug,Serialize, Deserialize)]
 pub enum OptionsType
+pub enum OptionsType
 {
 	Call,  
 	Put
@@ -182,7 +189,7 @@ pub enum OptionsType
 
 
 
-fn deserialize_date<'de, D>(deserializer: D) -> Result<Timestamp, D::Error> //turn all other 'normal timestamps into a Timestamp type'
+fn deserialize_date<'de, D>(deserializer: D) -> Result<Option<Timestamp>, D::Error> //turn all other 'normal timestamps into a Timestamp type'
 where
     D: Deserializer<'de>,
 {
@@ -207,7 +214,7 @@ where
 
 	let unixstamp: u64 = datetime.and_utc().timestamp().try_into().unwrap();
 	let timestamp = Timestamp {second,minute,hour,day,month,year,unixstamp};
-	Ok(timestamp)
+	Ok(Some(timestamp))
 }
 
 //for a newer release make this more space efficeint, i.e different quote types 

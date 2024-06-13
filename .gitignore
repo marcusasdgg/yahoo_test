@@ -1,4 +1,3 @@
 /target
 /test.py
-/src/main.rs
-/hidden
+src/main.rs
