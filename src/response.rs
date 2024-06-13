@@ -6,14 +6,11 @@ use serde::de::Error;
 #[derive(Deserialize, Debug)]
 #[allow(non_snake_case,dead_code)]
 pub struct QueryResponse {
-    pub quoteResponse: QuoteResponse, // nested object
-    pub quoteResponse: QuoteResponse, // nested object
+    pub quoteResponse: QuoteResponse, // nested object // nested object
 }
 #[derive(Deserialize, Debug)]
 #[allow(non_snake_case,dead_code)]
 pub struct QuoteResponse {
-	pub result : Vec<TradeResult>,
-	pub error : Option<String>,
 	pub result : Vec<TradeResult>,
 	pub error : Option<String>,
 }
