@@ -1,16 +1,13 @@
 use reqwest::header::COOKIE;
 use reqwest::header::USER_AGENT;
 
-mod response;
+pub mod response;
 use std::borrow::Borrow;
 
 use reqwest::Result;
 
 use std::sync::Arc;
 use tokio::sync::RwLock;
-
-
-
 
 pub struct YAHOOCONNECT {
     multiclient: reqwest::Client,
@@ -71,26 +68,40 @@ impl YAHOOCONNECT {
         Ok(())
     } //if update doesnt work, return error with each step.
 
-    pub async fn get_ticker(&self, lame: &str) -> std::result::Result<String, String> {
-        let query = self.get_tic_internal(lame).await.unwrap();
-        if query.contains("quoteResponse\":{\"")
+    pub async fn get_ticker(&self, lame: &str, exchange: &str) -> std::result::Result<String, String> {
+        let exchange_append : String = match exchange {
+            "ASX" => String::from(".AX"),
+            "NYSE" => String::new(),
+            "NASDAQ" => String::new(),
+            "HKEX" => String::from(".HK"),
+            "SGX" => String::from(".SI"),
+            _ => panic!()
+        };
+        let s = lame.to_owned() + exchange_append.as_str();
+        let name = s.as_str();
+        let ticker_info = self.get_tic_internal(name).await.unwrap();
+        if ticker_info.contains("result\":[{")
         {
-            return Ok(query) // need to update to type query response.
+            return Ok(ticker_info)
         }
-        if query.contains("Invalid Cookie") || query.contains("Invalid Crumb")
+        if ticker_info.contains("Invalid Crumb")
         {
             self.update_crumb_n_cookie().await.unwrap();
-            return Ok(self.get_tic_internal(lame).await.unwrap());
+            let ticker_info = self.get_tic_internal(name).await.unwrap();
+            if ticker_info.contains("quoteResponse")
+            {
+            return Ok(ticker_info)
+            } else {
+                return Err("Search Error".to_string());
+            }
         } else {
-            return Err("Error Searching for a ticker".to_string())
+             return Err("Search Error".to_string());
         }
+
         }
         
         //test //we read the error, if it is
-        // revamp the entire function according to iterator
     
-
-    //add error checking in this function.
     async fn get_tic_internal(&self,name: &str) -> Result<String>
     {
         let final_get = format!("{}{}&crumb={}",self.crumb_url.as_str(),name,self.crumb.read().await.as_str());
@@ -112,4 +123,4 @@ impl YAHOOCONNECT {
 
 //botched error checking, minor change needed to correctly return error when no stock found with ticker.
 
-//add serialization and ability to switch between exchange
+//add serialization and ability to switch between exchanges
