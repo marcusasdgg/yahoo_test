@@ -6,8 +6,7 @@ use serde::de::Error;
 #[derive(Deserialize, Debug)]
 #[allow(non_snake_case,dead_code)]
 pub struct QueryResponse {
-    pub quoteResponse: QuoteResponse, // nested object
-    pub quoteResponse: QuoteResponse, // nested object
+    pub quoteResponse: QuoteResponse, // nested object// nested object
 }
 #[derive(Deserialize, Debug)]
 #[allow(non_snake_case,dead_code)]
@@ -131,7 +130,7 @@ pub struct TradeResult {
 
 
 #[derive(Debug)]
-struct Timestamp {
+pub struct Timestamp {
 	second : u8,
 	minute : u8,
 	hour : u8,
@@ -147,7 +146,7 @@ struct Timestamp {
 //list enums below yasss queen
 #[derive(Serialize, Deserialize, Debug)]
 #[allow(dead_code)]
-enum Currency {
+pub enum Currency {
 	USD,
 	AUD,
 	HKD,
@@ -157,7 +156,7 @@ enum Currency {
 
 #[derive(Serialize, Deserialize, Debug)]
 #[allow(dead_code)]
-enum MarketState {
+pub enum MarketState {
 	PREPRE,
 	POSTPOST,
 	PRE,
@@ -175,7 +174,7 @@ enum MarketState {
 // }
 
 #[derive(Debug,Serialize, Deserialize)]
-enum OptionsType
+pub enum OptionsType
 {
 	Call,  
 	Put
