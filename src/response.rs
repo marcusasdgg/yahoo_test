@@ -1,20 +1,22 @@
+use std::clone;
+
 use serde::{Serialize, Deserialize};
 use chrono::NaiveDateTime;
 use serde::Deserializer;
 use serde::de::Error;
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 #[allow(non_snake_case,dead_code)]
 pub struct QueryResponse {
     pub quoteResponse: QuoteResponse, // nested object// nested object
 }
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 #[allow(non_snake_case,dead_code)]
 pub struct QuoteResponse {
 	pub result : Vec<TradeResult>,
 	pub error : Option<String>,
 }
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 #[allow(non_snake_case,dead_code)]
 pub struct TradeResult {
     pub quoteType: String, 
@@ -129,7 +131,7 @@ pub struct TradeResult {
 
 
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Timestamp {
 	second : u8,
 	minute : u8,
@@ -144,7 +146,7 @@ pub struct Timestamp {
 
 
 //list enums below yasss queen
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[allow(dead_code)]
 pub enum Currency {
 	USD,
@@ -154,7 +156,7 @@ pub enum Currency {
 	SGD
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[allow(dead_code)]
 pub enum MarketState {
 	PREPRE,
@@ -173,7 +175,7 @@ pub enum MarketState {
 // 	Future
 // }
 
-#[derive(Debug,Serialize, Deserialize)]
+#[derive(Debug,Serialize, Deserialize, Clone)]
 pub enum OptionsType
 {
 	Call,  

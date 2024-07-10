@@ -31,3 +31,7 @@
 ## [0.1.6] - 2024-5-29
 ### Fixed
 - internal issues cayused 0.1.5 to be yanked please use this version.
+
+## [0.1.6] - 2024-5-29
+### Fixed
+- derived clone for struct
