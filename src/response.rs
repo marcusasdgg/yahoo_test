@@ -1,29 +1,29 @@
 use std::clone;
 
-use serde::{Serialize, Deserialize};
 use chrono::NaiveDateTime;
-use serde::Deserializer;
 use serde::de::Error;
+use serde::Deserializer;
+use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Debug, Clone)]
-#[allow(non_snake_case,dead_code)]
+#[allow(non_snake_case, dead_code)]
 pub struct QueryResponse {
     pub quoteResponse: QuoteResponse, // nested object// nested object
 }
 #[derive(Deserialize, Debug, Clone)]
-#[allow(non_snake_case,dead_code)]
+#[allow(non_snake_case, dead_code)]
 pub struct QuoteResponse {
-	pub result : Vec<TradeResult>,
-	pub error : Option<String>,
+    pub result: Vec<TradeResult>,
+    pub error: Option<String>,
 }
 #[derive(Deserialize, Debug, Clone)]
-#[allow(non_snake_case,dead_code)]
+#[allow(non_snake_case, dead_code)]
 pub struct TradeResult {
-    pub quoteType: String, 
+    pub quoteType: String,
     pub quoteSourceName: String,
-    pub currency: Currency, 
+    pub currency: Currency,
     pub marketState: MarketState,
-    pub regularMarketChangePercent: f64, 
+    pub regularMarketChangePercent: f64,
     pub regularMarketPrice: f64,
     pub exchange: String,
     pub shortName: String,
@@ -122,48 +122,25 @@ pub struct TradeResult {
     pub logoUrl: Option<String>,
 }
 
-
-
-
-
-
-
-
-
-
-#[derive(Debug, Clone)]
-pub struct Timestamp {
-	second : u8,
-	minute : u8,
-	hour : u8,
-	day : u8,
-	month : u8,
-	year : u16,
-	unixstamp : u64
-}
-
-
-
-
 //list enums below yasss queen
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[allow(dead_code)]
 pub enum Currency {
-	USD,
-	AUD,
-	HKD,
-	CNY,
-	SGD
+    USD,
+    AUD,
+    HKD,
+    CNY,
+    SGD,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[allow(dead_code)]
 pub enum MarketState {
-	PREPRE,
-	POSTPOST,
-	PRE,
-	CLOSED,
-	REGULAR
+    PREPRE,
+    POSTPOST,
+    PRE,
+    CLOSED,
+    REGULAR,
 }
 
 // #[derive(Serialize, Deserialize, Debug)]
@@ -175,42 +152,47 @@ pub enum MarketState {
 // 	Future
 // }
 
-#[derive(Debug,Serialize, Deserialize, Clone)]
-pub enum OptionsType
-{
-	Call,  
-	Put
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub enum OptionsType {
+    Call,
+    Put,
 }
 
-
-
-fn deserialize_date<'de, D>(deserializer: D) -> Result<Option<Timestamp>, D::Error> //turn all other 'normal timestamps into a Timestamp type'
+fn deserialize_date<'de, D>(deserializer: D) -> Result<Option<Timestamp>, D::Error>
+//turn all other 'normal timestamps into a Timestamp type'
 where
     D: Deserializer<'de>,
 {
-	let timestamp = String::deserialize(deserializer).unwrap();
-	if timestamp.len() != 20
-	{
-		return Err(D::Error::custom("Invalid timestamp length"));
-	}
-	let year = timestamp[0..4].parse::<u16>().map_err(D::Error::custom)?;
+    let timestamp = String::deserialize(deserializer).unwrap();
+    if timestamp.len() != 20 {
+        return Err(D::Error::custom("Invalid timestamp length"));
+    }
+    let year = timestamp[0..4].parse::<u16>().map_err(D::Error::custom)?;
     let month = timestamp[5..7].parse::<u8>().map_err(D::Error::custom)?;
     let day = timestamp[8..10].parse::<u8>().map_err(D::Error::custom)?;
     let hour = timestamp[11..13].parse::<u8>().map_err(D::Error::custom)?;
     let minute = timestamp[14..16].parse::<u8>().map_err(D::Error::custom)?;
     let second = timestamp[17..19].parse::<u8>().map_err(D::Error::custom)?;
-	
-	let date = chrono::NaiveDate::from_ymd_opt(year.into(), month.into(), day.into())
-	.ok_or_else(|| D::Error::custom("Invalid date"))?;
-	let time = chrono::NaiveTime::from_hms_opt(hour.into(), minute.into(), second.into())
-	.ok_or_else(|| D::Error::custom("Invalid time"))?;
 
-	let datetime = NaiveDateTime::new(date,time);
+    let date = chrono::NaiveDate::from_ymd_opt(year.into(), month.into(), day.into())
+        .ok_or_else(|| D::Error::custom("Invalid date"))?;
+    let time = chrono::NaiveTime::from_hms_opt(hour.into(), minute.into(), second.into())
+        .ok_or_else(|| D::Error::custom("Invalid time"))?;
 
-	let unixstamp: u64 = datetime.and_utc().timestamp().try_into().unwrap();
-	let timestamp = Timestamp {second,minute,hour,day,month,year,unixstamp};
-	Ok(Some(timestamp))
+    let datetime = NaiveDateTime::new(date, time);
+
+    let unixstamp: u64 = datetime.and_utc().timestamp().try_into().unwrap();
+    let timestamp = Timestamp {
+        second,
+        minute,
+        hour,
+        day,
+        month,
+        year,
+        unixstamp,
+    };
+    Ok(Some(timestamp))
 }
 
-//for a newer release make this more space efficeint, i.e different quote types 
+//for a newer release make this more space efficeint, i.e different quote types
 //get different structs.

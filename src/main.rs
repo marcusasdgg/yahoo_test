@@ -1,11 +1,15 @@
 mod unionTest;
+use unionTest::FinResult;
 use yahoo_tick_grabber::YAHOOCONNECT;
-mod response;
-
 #[tokio::main]
-async fn main() -> Result<(),()> {
+async fn main() -> Result<(), ()> {
     let s = YAHOOCONNECT::new().await.unwrap();
-    let guts = s.get_ticker("AAPL,TSLA,TSLA240712C00075000").await.unwrap();
+    let guts = s.get_ticker("CXO.ax").await.unwrap();
     println!("{}", guts);
+    let t = FinResult::new(&guts);
+    for b in t.unwrap() {
+        println!("{:?}", b);
+    }
+
     Ok(())
 }
