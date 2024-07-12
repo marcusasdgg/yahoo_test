@@ -1,14 +1,11 @@
-
+mod unionTest;
 use yahoo_tick_grabber::YAHOOCONNECT;
 mod response;
-use response::{QueryResponse};
 
 #[tokio::main]
 async fn main() -> Result<(),()> {
     let s = YAHOOCONNECT::new().await.unwrap();
-    let guts = s.get_ticker("TSLA240614C00075000").await.unwrap();
-
-    println!("{:?}",guts.quoteResponse.result);
-
+    let guts = s.get_ticker("AAPL,TSLA,TSLA240712C00075000").await.unwrap();
+    println!("{}", guts);
     Ok(())
 }
