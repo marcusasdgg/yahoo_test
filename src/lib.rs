@@ -8,6 +8,9 @@ use reqwest::Result;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 
+pub mod fin_retypes;
+use fin_retypes::FinResult;
+
 pub struct YAHOOCONNECT {
     multiclient: reqwest::Client,
     cookie: Arc<RwLock<String>>,
@@ -75,15 +78,16 @@ impl YAHOOCONNECT {
         Ok(())
     } //if update doesnt work, return error with each step.
 
-    pub async fn get_ticker(&self, lame: &str) -> std::result::Result<String, String> {
+    pub async fn get_ticker(&self, lame: &str) -> std::result::Result<Vec<FinResult>, String> {
         println!("getting ticker \"{}\"", lame);
         let query = self.get_tic_internal(lame).await.unwrap();
         if query.contains("quoteResponse\":{\"") {
-            return Ok(query);
+            return FinResult::new(&query);
         }
         if query.contains("Invalid Cookie") || query.contains("Invalid Crumb") {
             self.update_crumb_n_cookie().await.unwrap();
-            return Ok(self.get_tic_internal(lame).await.unwrap());
+            let queryretry = FinResult::new(&self.get_tic_internal(lame).await.unwrap())?;
+            return Ok(queryretry);
         } else {
             return Err("Error Searching for a ticker".to_string());
         }
