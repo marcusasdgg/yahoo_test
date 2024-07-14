@@ -35,3 +35,10 @@
 ## [0.1.6] - 2024-5-29
 ### Fixed
 - derived clone for struct
+
+## [1.0.0] - 2024-7-13
+### added
+- new enum system to store finance data, based off of either Option or Equity.
+- added robust type system for that as well as error checking.
+### fixed
+- fixed previous version failing to get any ticker caused by deserialization error.
