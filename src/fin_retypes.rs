@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use serde_json::{self, Value};
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 #[allow(dead_code, non_snake_case)]
 pub struct StockStruct {
     pub language: String,
@@ -90,7 +90,7 @@ pub struct StockStruct {
     pub quoteSourceName: Option<String>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 #[allow(non_snake_case, dead_code)]
 pub struct OptionStruct {
     pub language: String,
@@ -146,7 +146,7 @@ pub struct OptionStruct {
     pub symbol: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 #[serde(tag = "quoteType")]
 pub enum FinResult {
     EQUITY(StockStruct),

@@ -46,3 +46,7 @@
 ## [1.0.1] - 2024-7-13
 ### fixed
 - fixed visibility for Finretypes
+
+## [1.0.2] - 2024-7-13
+### fixed
+- added Clone trait to FinResult.
