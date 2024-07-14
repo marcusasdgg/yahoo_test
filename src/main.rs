@@ -3,7 +3,7 @@ use yahoo_tick_grabber::{fin_retypes::FinResult, YAHOOCONNECT};
 async fn main() -> Result<(), ()> {
     let s = YAHOOCONNECT::new().await.unwrap();
     let guts = s
-        .get_ticker("NVDA,TSLA240719C00050000,AAPL,RTX,nwm.AX,CXO.ax")
+        .get_ticker("NVDA,TSLA240719C00277500,AAPL,RTX,nwm.AX,CXO.ax,TSM,ADSDSA")
         .await
         .unwrap();
 
