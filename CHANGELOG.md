@@ -42,3 +42,7 @@
 - added robust type system for that as well as error checking.
 ### fixed
 - fixed previous version failing to get any ticker caused by deserialization error.
+
+## [1.0.1] - 2024-7-13
+### fixed
+- fixed visibility for Finretypes
